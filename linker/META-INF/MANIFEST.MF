@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: log4j-1.2.14.jar mysql-connector-java-5.1.2-beta-bin.jar
+Main-Class: Execute
+

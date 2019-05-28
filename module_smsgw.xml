@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_smsgw" default="compile.module.smsgw">
+  <dirname property="module.smsgw.basedir" file="${ant.file.module_smsgw}"/>
+  
+  <property name="module.jdk.home.smsgw" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.smsgw" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.smsgw" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.smsgw" value="-encoding UTF-8 -source 1.6 -target 1.6 ${compiler.args}"/>
+  
+  <property name="smsgw.output.dir" value="${module.smsgw.basedir}/out/production"/>
+  <property name="smsgw.testoutput.dir" value="${module.smsgw.basedir}/out/smsgw"/>
+  
+  <path id="smsgw.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="smsgw.module.production.classpath">
+    <path refid="${module.jdk.classpath.smsgw}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  <path id="smsgw.runtime.production.module.classpath">
+    <pathelement location="${smsgw.output.dir}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  <path id="smsgw.module.classpath">
+    <path refid="${module.jdk.classpath.smsgw}"/>
+    <pathelement location="${smsgw.output.dir}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  <path id="smsgw.runtime.module.classpath">
+    <pathelement location="${smsgw.testoutput.dir}"/>
+    <pathelement location="${smsgw.output.dir}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.smsgw">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.smsgw">
+    <patternset refid="excluded.from.module.smsgw"/>
+  </patternset>
+  
+  <path id="smsgw.module.sourcepath">
+    <dirset dir="${module.smsgw.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.smsgw" depends="compile.module.smsgw.production,compile.module.smsgw.tests" description="Compile module smsgw"/>
+  
+  <target name="compile.module.smsgw.production" depends="register.custom.compilers" description="Compile module smsgw; production classes">
+    <mkdir dir="${smsgw.output.dir}"/>
+    <javac2 destdir="${smsgw.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.smsgw}/javac">
+      <compilerarg line="${compiler.args.smsgw}"/>
+      <bootclasspath refid="smsgw.module.bootclasspath"/>
+      <classpath refid="smsgw.module.production.classpath"/>
+      <src refid="smsgw.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.smsgw"/>
+    </javac2>
+    
+    <copy todir="${smsgw.output.dir}">
+      <fileset dir="${module.smsgw.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.smsgw.tests" depends="register.custom.compilers,compile.module.smsgw.production" description="compile module smsgw; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.smsgw" description="cleanup module">
+    <delete dir="${smsgw.output.dir}"/>
+    <delete dir="${smsgw.testoutput.dir}"/>
+  </target>
+</project>
